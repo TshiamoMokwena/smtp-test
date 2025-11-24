@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const emailRoutes = require('./routes/emailRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api', emailRoutes);
+app.use('/api/users', userRoutes);
 
 // Health check endpoint
 app.get('/', (req, res) => {
