@@ -1,8 +1,11 @@
-const Database = require('better-sqlite3');
-const { drizzle } = require('drizzle-orm/better-sqlite3');
+const { drizzle } = require('drizzle-orm/node-postgres');
+const { Pool } = require('pg');
 const schema = require('./schema');
 
-const sqlite = new Database('sqlite.db');
-const db = drizzle(sqlite, { schema });
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+});
+
+const db = drizzle(pool, { schema });
 
 module.exports = db;

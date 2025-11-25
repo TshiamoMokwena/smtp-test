@@ -1,11 +1,10 @@
-const { sqliteTable, text, integer } = require('drizzle-orm/sqlite-core');
-const { sql } = require('drizzle-orm');
+const { pgTable, text, serial, timestamp } = require('drizzle-orm/pg-core');
 
-const users = sqliteTable('users', {
-    id: integer('id').primaryKey({ autoIncrement: true }),
+const users = pgTable('users', {
+    id: serial('id').primaryKey(),
     name: text('name').notNull(),
     email: text('email').notNull().unique(),
-    createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+    createdAt: timestamp('created_at').defaultNow(),
 });
 
 module.exports = { users };

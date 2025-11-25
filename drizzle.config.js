@@ -1,8 +1,8 @@
 module.exports = {
     schema: "./db/schema.js",
     out: "./drizzle",
-    dialect: "sqlite",
+    dialect: "postgresql",
     dbCredentials: {
-        url: "sqlite.db",
+        url: process.env.DATABASE_URL,
     },
 };
