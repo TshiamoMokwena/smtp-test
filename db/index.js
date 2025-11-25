@@ -27,7 +27,7 @@ const pool = mysql.createPool({
         const connection = await pool.getConnection();
         console.log('✅ MySQL pool connected successfully');
 
-        const [rows] = await connection.query('SELECT NOW() as current_time, VERSION() as db_version');
+        const [rows] = await connection.query('SELECT NOW() as `current_time`, VERSION() as db_version');
         console.log('✅ Database connection test successful');
         console.log('📅 Database time:', rows[0].current_time);
         console.log('🗄️  Database version:', rows[0].db_version);

@@ -1,5 +1,6 @@
 const db = require('../db');
 const { users } = require('../db/schema');
+const { eq } = require('drizzle-orm');
 
 exports.createUser = async (req, res) => {
     try {
@@ -9,9 +10,15 @@ exports.createUser = async (req, res) => {
         }
 
         console.log(`Attempting to create user: ${name} (${email})`);
-        const result = await db.insert(users).values({ name, email }).returning();
-        console.log('User created successfully:', result[0]);
-        res.status(201).json(result[0]);
+
+        // MySQL doesn't support .returning(), so we insert and then fetch
+        await db.insert(users).values({ name, email });
+
+        // Fetch the newly created user
+        const [newUser] = await db.select().from(users).where(eq(users.email, email));
+
+        console.log('User created successfully:', newUser);
+        res.status(201).json(newUser);
     } catch (error) {
         console.error('❌ Error creating user:', {
             message: error.message,
@@ -20,8 +27,8 @@ exports.createUser = async (req, res) => {
             stack: error.stack
         });
 
-        // Handle duplicate email error
-        if (error.code === '23505') {
+        // Handle duplicate email error (MySQL error code)
+        if (error.code === 'ER_DUP_ENTRY') {
             return res.status(400).json({ error: 'Email already exists' });
         }
 

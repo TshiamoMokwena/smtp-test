@@ -15,7 +15,7 @@ router.get('/health', async (req, res) => {
         });
 
         connection = await pool.getConnection();
-        const [rows] = await connection.query('SELECT NOW() as current_time, VERSION() as db_version');
+        const [rows] = await connection.query('SELECT NOW() as `current_time`, VERSION() as db_version');
         connection.release();
         await pool.end();
 
