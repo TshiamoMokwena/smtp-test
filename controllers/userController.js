@@ -8,14 +8,30 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ error: 'Name and email are required' });
         }
 
+        console.log(`Attempting to create user: ${name} (${email})`);
         const result = await db.insert(users).values({ name, email }).returning();
+        console.log('User created successfully:', result[0]);
         res.status(201).json(result[0]);
     } catch (error) {
-        console.error('Error creating user:', error);
+        console.error('❌ Error creating user:', {
+            message: error.message,
+            code: error.code,
+            detail: error.detail,
+            stack: error.stack
+        });
+
+        // Handle duplicate email error
         if (error.code === '23505') {
             return res.status(400).json({ error: 'Email already exists' });
         }
-        res.status(500).json({ error: 'Failed to create user', details: error.message });
+
+        // Return detailed error information
+        res.status(500).json({
+            error: 'Failed to create user',
+            details: error.message,
+            code: error.code || 'UNKNOWN',
+            hint: error.hint || 'Check server logs for more details'
+        });
     }
 };
 
