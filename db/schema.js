@@ -1,9 +1,9 @@
-const { pgTable, text, serial, timestamp } = require('drizzle-orm/pg-core');
+const { mysqlTable, varchar, int, timestamp } = require('drizzle-orm/mysql-core');
 
-const users = pgTable('users', {
-    id: serial('id').primaryKey(),
-    name: text('name').notNull(),
-    email: text('email').notNull().unique(),
+const users = mysqlTable('users', {
+    id: int('id').primaryKey().autoincrement(),
+    name: varchar('name', { length: 255 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull().unique(),
     createdAt: timestamp('created_at').defaultNow(),
 });
 
